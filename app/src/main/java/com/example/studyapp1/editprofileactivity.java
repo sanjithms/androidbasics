@@ -1,6 +1,7 @@
 package com.example.studyapp1;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ public class editprofileactivity extends AppCompatActivity {
     Button editbtn;
     String username,phonenumber;
     DatabaseReference reference;
+    Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +40,6 @@ public class editprofileactivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(editprofileactivity.this, "No changes made", Toast.LENGTH_SHORT).show();
                     }
-                    startActivity(new Intent(editprofileactivity.this, profilefragment.class));
                     finish();
                 } else {
                     Toast.makeText(editprofileactivity.this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();

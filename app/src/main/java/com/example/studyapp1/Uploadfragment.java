@@ -50,6 +50,7 @@ public class Uploadfragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
+    private  Fragment fragment;
 
     public Uploadfragment() {
 
@@ -165,7 +166,8 @@ public class Uploadfragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    navigateToHomeFragment();
+                    fragment=new Homefragment();
+                    getActivity().finish();
                     Toast.makeText(getContext(), "Upload Succesfull", Toast.LENGTH_SHORT).show();
 
                 }
@@ -179,11 +181,5 @@ public class Uploadfragment extends Fragment {
 
 
     }
-    private void navigateToHomeFragment() {
-        FragmentManager fragmentManager = getParentFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, new Homefragment());
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
+
 }

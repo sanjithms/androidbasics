@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 
 import android.annotation.SuppressLint;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     BottomNavigationView bottomNavigationView;
     FragmentManager fragmentManager;
     Toolbar toolbar;
+    Fragment fragment;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,9 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        fragment = new Homefragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+
 
         NavigationView navigationView=findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -57,54 +63,54 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemid=item.getItemId();
-                if (itemid==R.id.home){
-                    replaceFragment(new Homefragment());
-                    return true;
-                } else if (itemid==R.id.profile) {
-                    replaceFragment(new profilefragment());
-                    return true;
+                int itemId=item.getItemId();
+                if (itemId == R.id.home) {
+                    fragment = new Homefragment();
+                } else if (itemId == R.id.profile) {
+                    fragment = new profilefragment();
+                } else if (itemId == R.id.upload) {
+                    fragment = new Uploadfragment();
+                }
 
-                } else if (itemid==R.id.upload) {
-                    replaceFragment(new Uploadfragment());
-                    return true;
 
+                if (fragment != null) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+
+                    return true;
                 }
                 return false;
             }
         });
-        fragmentManager=getSupportFragmentManager();
-        replaceFragment(new Homefragment());
-
-
-
-
 
 
     }
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemid=item.getItemId();
-        if (itemid==R.id.nav_home){
-            replaceFragment(new Homefragment());
-        } else if (itemid==R.id.nav_profile) {
-            replaceFragment(new profilefragment() );
+        if (itemid == R.id.nav_home) {
+            fragment = new Homefragment();
+        } else if (itemid == R.id.nav_profile) {
+            fragment = new profilefragment();
 
-        } else if (itemid==R.id.nav_settings) {
-            replaceFragment(new settingsfragment());
-
-        } else if (itemid==R.id.nav_logout) {
+        } else if (itemid == R.id.nav_settings) {
+            fragment = new settingsfragment();
+        } else if (itemid == R.id.nav_logout) {
             logout();
-
-        } else if (itemid==R.id.nav_share) {
+            return true;
+        } else if (itemid == R.id.nav_share) {
             Toast.makeText(this, "Shared Successfully", Toast.LENGTH_SHORT).show();
-
-        } else if (itemid==R.id.nav_about) {
-            replaceFragment(new aboutfragment());
-
+            return true;
+        } else if (itemid == R.id.nav_about) {
+            fragment = new aboutfragment();
         }
-        drawerLayout.closeDrawer(GravityCompat.START);
-        return true;
+
+        if (fragment != null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            drawerLayout.closeDrawer(GravityCompat.START);
+
+            return true;
+        }
+        return false;
     }
 
     private void logout() {
@@ -122,33 +128,14 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         });
     }
 
-    private  void replaceFragment(androidx.fragment.app.Fragment fragment) {
-        androidx.fragment.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        androidx.fragment.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.commit();
-    }
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)){
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            startActivity(new Intent(MainActivity.this, introductionactivity.class));
-            finish();
-        }
-    }
-
-
 
 }
