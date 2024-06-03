@@ -42,6 +42,8 @@ public class Uploadfragment extends Fragment {
     Button uploadbtn;
     String imageurl;
     Uri uri;
+    Fragment fragment;
+    FragmentManager fragmentManager;
 
 
     private static final String ARG_PARAM1 = "param1";
@@ -50,7 +52,6 @@ public class Uploadfragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
-    private  Fragment fragment;
 
     public Uploadfragment() {
 
@@ -74,6 +75,7 @@ public class Uploadfragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+
     }
 
     @Override
@@ -90,6 +92,7 @@ public class Uploadfragment extends Fragment {
         uploadtopic=view.findViewById(R.id.uploaddata);
         uploaddesc=view.findViewById(R.id.uploaddescrip);
         uploalan=view.findViewById(R.id.uploadlan);
+
         ActivityResultLauncher<Intent> activityResultLauncher=registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
@@ -159,6 +162,7 @@ public class Uploadfragment extends Fragment {
         Dataclass dataclass=new Dataclass(title,desc,lan,imageurl);
         FirebaseUser currentuser= FirebaseAuth.getInstance().getCurrentUser();
 
+
             String userid= currentuser.getUid();
 
 
@@ -166,9 +170,13 @@ public class Uploadfragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    fragment=new Homefragment();
-                    getActivity().finish();
+
+
                     Toast.makeText(getContext(), "Upload Succesfull", Toast.LENGTH_SHORT).show();
+                    fragment = new Homefragment();
+                    FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, fragment);
+                    transaction.commit();
 
                 }
             }
@@ -181,5 +189,8 @@ public class Uploadfragment extends Fragment {
 
 
     }
+
+
+
 
 }
