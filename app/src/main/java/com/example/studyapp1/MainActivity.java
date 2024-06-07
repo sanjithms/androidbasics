@@ -36,6 +36,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
     DrawerLayout drawerLayout;
     BottomNavigationView bottomNavigationView;
+    NavigationView navigationView;
     FragmentManager fragmentManager;
     Toolbar toolbar;
     Fragment fragment;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
 
 
-        NavigationView navigationView=findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         bottomNavigationView=findViewById(R.id.bottomNavigationView);
@@ -66,8 +67,10 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 int itemId=item.getItemId();
                 if (itemId == R.id.home) {
                     fragment = new Homefragment();
+                    setMenuNavigationItem(R.id.nav_home);
                 } else if (itemId == R.id.profile) {
                     fragment = new profilefragment();
+                    setMenuNavigationItem(R.id.nav_profile);
                 } else if (itemId == R.id.upload) {
                     fragment = new Uploadfragment();
                 }
@@ -89,8 +92,10 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         int itemid=item.getItemId();
         if (itemid == R.id.nav_home) {
             fragment = new Homefragment();
+            setBottomNavigationItem(R.id.home);
         } else if (itemid == R.id.nav_profile) {
             fragment = new profilefragment();
+            setBottomNavigationItem(R.id.profile);
 
         } else if (itemid == R.id.nav_settings) {
             fragment = new settingsfragment();
@@ -111,6 +116,13 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
             return true;
         }
         return false;
+    }
+
+    private void setBottomNavigationItem(int itemId) {
+        bottomNavigationView.setSelectedItemId(itemId);
+    }
+    private void setMenuNavigationItem(int itemId) {
+        navigationView.setCheckedItem(itemId);
     }
 
     private void logout() {
